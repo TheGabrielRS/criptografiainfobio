@@ -8,6 +8,7 @@ char *monta_chave(char *string);
 char *inverte_string(char *string);
 char **split(char frase[], char separador);
 int quant_espaco(char *string);
+int *converte_string(char *string);
 
 
 void main()
@@ -19,22 +20,54 @@ void main()
 
     puts(palavra);
 
-    char *reverso;
 	char **splitado;
 	
-	//reverso = malloc((strlen(palavra)+1)*sizeof(char));
-
-    printf("palavra %d\n", strlen(palavra));
-
-	splitado = split(palavra, ' '); 
+	splitado = split(palavra, ' ');
+	 
+	int x, quantEspaco = quant_espaco(palavra);
 	
-	int x=0;
-	for(x=0; x < quant_espaco(palavra); x++)
+	char chave[quantEspaco];
+	
+	//gera a chave
+	for(x=0; x < quantEspaco; x++)
 	{
-		printf("split %d - %s\n",x, splitado[x]);
-		splitado[x] = inverte_string(splitado[x]);
-		printf("split invertido %d - %s\n",x, splitado[x]);
+		chave[x] = splitado[x][0];
 	}
+	chave[x] = '\0';
+	
+	//inverte a string
+	for(x=0; x < quantEspaco; x++)
+	{
+		splitado[x] = inverte_string(splitado[x]);
+	}
+
+	printf("\nchave | %s\n", chave);
+	
+	int *convertido;
+	
+	int i;
+	for(x=0; x < quantEspaco; x++)
+	{
+		convertido = converte_string(splitado[x]);
+		for(i = 0; i < strlen(splitado[x]); i++)
+		{
+			printf("posicao %d | codigo %d \t| letra %c \n", i, convertido[i], (char)convertido[i]);
+		}
+	}
+}
+
+int *converte_string(char *string)
+{
+	int *convertido;
+	
+	convertido = malloc((strlen(string)));
+	
+	int x;
+	for(x=0; x < strlen(string); x++)
+	{
+		convertido[x] = (int)string[x];
+	}
+	return convertido;
 }
 
 int quant_espaco(char *string)
@@ -47,6 +80,27 @@ int quant_espaco(char *string)
 	return quant;
 }
 
+char *inverte_string(char *string)
+{
+	char *invertida = NULL;
+	
+	invertida = malloc((strlen(string))*sizeof(char));
+	
+	int tras;
+	for(tras = 0; tras < strlen(string)+1; tras++)
+	{
+		invertida[tras] = ' ';
+	}
+	
+	invertida[strlen(string)+1] = '\0';
+	
+	for(tras = strlen(string); tras > 0; tras--)
+	{
+		invertida[tras] = string[strlen(string) - tras];
+	}
+	
+	return invertida;
+}
 
 char **split(char frase[], char separador)
 {
@@ -87,27 +141,6 @@ char **split(char frase[], char separador)
         return '\0';
 }
 
-char *inverte_string(char *string)
-{
-	char *invertida = NULL;
-	
-	invertida = malloc((strlen(string))*sizeof(char));
-	
-	int tras = 0;
-	for(tras; tras < strlen(string)-1; tras++)
-		invertida[tras] = ' ';
-		
-	invertida[strlen(string)+1] = '\0';
-	
-	for(tras = strlen(string); tras > 0; tras--)
-	{
-		invertida[tras] = string[strlen(string) - tras];
-	}
-	return invertida;
-}
-
-
-
 char *read_string(void)
 {
   char *big = NULL, *old_big;
@@ -125,5 +158,6 @@ char *read_string(void)
     }
     strcpy(big + old_len, s);
   } while (len - old_len == 10);
+  puts(big);
   return big;
 }
