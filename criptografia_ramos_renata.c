@@ -1,66 +1,87 @@
+//ta no PC
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
+#include <assert.h>
 
 char *read_string(void);
 char *monta_chave(char *string);
 char *inverte_string(char *string);
-char **split(char frase[], char separador);
+char** split(char* a_str, const char a_delim);
 int quant_espaco(char *string);
 int *converte_string(char *string);
+char remove_espaco(char *string);
 
 
-void main()
+int main()
 {
-
     char *palavra;
-
     palavra = read_string();
 
-    puts(palavra);
-
 	char **splitado;
+	int quantEspaco = quant_espaco(palavra);
 	
 	splitado = split(palavra, ' ');
 	 
-	int x, quantEspaco = quant_espaco(palavra);
-	
+	int x;
 	char chave[quantEspaco];
-	
 	//gera a chave
 	for(x=0; x < quantEspaco; x++)
 	{
 		chave[x] = splitado[x][0];
 	}
 	chave[x] = '\0';
+	printf("\nchave | %s\n", chave);
 	
 	//inverte a string
 	for(x=0; x < quantEspaco; x++)
 	{
 		splitado[x] = inverte_string(splitado[x]);
 	}
-
-	printf("\nchave | %s\n", chave);
+	
+	//remove os espaços
+	for(x=0; x < quantEspaco; x++)
+	{
+		splitado[x]++;
+	}
 	
 	int *convertido;
-	
 	int i;
 	for(x=0; x < quantEspaco; x++)
 	{
 		convertido = converte_string(splitado[x]);
 		for(i = 0; i < strlen(splitado[x]); i++)
-		{
-			printf("posicao %d | codigo %d \t| letra %c \n", i, convertido[i], (char)convertido[i]);
-		}
+			printf("%d codigo \t %c letra\n", convertido[i], (char)convertido[i]);
 	}
+	
+	
+	return 0;
+}
+
+char remove_espaco(char *string)
+{
+	char *novo_split;
+	int size = (strlen(string)-1);
+	novo_split = malloc(size*sizeof(char));
+	
+	int x;
+	for(x = 0; x < strlen(string); x++)
+	{
+		novo_split[x-1] = string[x];	
+	}
+	
+	printf("sem espaco %s \n", novo_split);
+	
+	return novo_split;
 }
 
 int *converte_string(char *string)
 {
 	int *convertido;
 	
-	convertido = malloc((strlen(string)));
+	convertido = malloc((strlen(string))*sizeof(int));
 	
 	int x;
 	for(x=0; x < strlen(string); x++)
@@ -86,12 +107,11 @@ char *inverte_string(char *string)
 	
 	invertida = malloc((strlen(string))*sizeof(char));
 	
-	int tras;
+	int tras;//inicia o vetor de inversao
 	for(tras = 0; tras < strlen(string)+1; tras++)
 	{
 		invertida[tras] = ' ';
 	}
-	
 	invertida[strlen(string)+1] = '\0';
 	
 	for(tras = strlen(string); tras > 0; tras--)
@@ -102,43 +122,52 @@ char *inverte_string(char *string)
 	return invertida;
 }
 
-char **split(char frase[], char separador)
+char** split(char* a_str, const char a_delim)
 {
-    int i, j, k, contsep = 0;
+    char** result    = 0;
+    size_t count     = 0;
+    char* tmp        = a_str;
+    char* last_comma = 0;
+    char delim[2];
+    delim[0] = a_delim;
+    delim[1] = 0;
 
-     for(i=0,contsep=0;i<strlen(frase);i++)
-       if(frase[i] == separador)
-          contsep++;
-
-    char  aux[contsep][20];
-    char **result = (char**)malloc(contsep*sizeof(char));
-    
-    if(contsep)
+    /* Count how many elements will be extracted. */
+    while (*tmp)
     {
-        for(i=0; i<=contsep; i++ )
-          *(result + i) = (char*)malloc(40*sizeof(char));
-        
-        for(i=0,k=0,j=0; i < strlen(frase); i++)
-           if(frase[i] != separador)
-           {
-              aux[k][j] = frase[i];
-              j++;
-           }
-           else
-           {
-              aux[k][j] = 0;
-              k++;
-              j=0;
-           }
-        aux[k][j] = 0;
-        
-        for(i=0;i<=contsep;i++)
-          *(result+i) = strcpy(*(result+i), aux[i]);
-        
-        return result;
+        if (a_delim == *tmp)
+        {
+            count++;
+            last_comma = tmp;
+        }
+        tmp++;
     }
-    else
-        return '\0';
+
+    /* Add space for trailing token. */
+    count += last_comma < (a_str + strlen(a_str) - 1);
+
+    /* Add space for terminating null string so caller
+       knows where the list of returned strings ends. */
+    count++;
+
+    result = malloc(sizeof(char*) * count);
+
+    if (result)
+    {
+        size_t idx  = 0;
+        char* token = strtok(a_str, delim);
+
+        while (token)
+        {
+            assert(idx < count);
+            *(result + idx++) = strdup(token);
+            token = strtok(0, delim);
+        }
+        assert(idx == count - 1);
+        *(result + idx) = 0;
+    }
+
+    return result;
 }
 
 char *read_string(void)
