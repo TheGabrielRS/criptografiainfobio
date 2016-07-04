@@ -12,8 +12,6 @@ char *inverte_string(char *string);
 char** split(char* a_str, const char a_delim);
 int quant_espaco(char *string);
 int *converte_string(char *string);
-char remove_espaco(char *string);
-
 
 int main()
 {
@@ -47,6 +45,16 @@ int main()
 		splitado[x]++;
 	}
 	
+	//concatena a string invertida
+	char strInvertida[strlen(palavra)];
+	strInvertida[0] = '\0';
+	for(x=0; x < quantEspaco; x++)
+	{
+		strcat(strInvertida, splitado[x]);
+	}
+	
+	printf("olha a string invertida concatenada: %s \n", strInvertida);
+	
 	int *convertido;
 	int i;
 	for(x=0; x < quantEspaco; x++)
@@ -56,25 +64,7 @@ int main()
 			printf("%d codigo \t %c letra\n", convertido[i], (char)convertido[i]);
 	}
 	
-	
 	return 0;
-}
-
-char remove_espaco(char *string)
-{
-	char *novo_split;
-	int size = (strlen(string)-1);
-	novo_split = malloc(size*sizeof(char));
-	
-	int x;
-	for(x = 0; x < strlen(string); x++)
-	{
-		novo_split[x-1] = string[x];	
-	}
-	
-	printf("sem espaco %s \n", novo_split);
-	
-	return novo_split;
 }
 
 int *converte_string(char *string)
