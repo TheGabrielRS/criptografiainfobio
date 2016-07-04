@@ -12,6 +12,8 @@ char *inverte_string(char *string);
 char** split(char* a_str, const char a_delim);
 int quant_espaco(char *string);
 int *converte_string(char *string);
+void *encripta_string(char *string, char* chave);
+
 
 int main()
 {
@@ -24,7 +26,7 @@ int main()
 	splitado = split(palavra, ' ');
 	 
 	int x;
-	char chave[quantEspaco];
+	char *chave = malloc((quantEspaco+1)*sizeof(char));
 	//gera a chave
 	for(x=0; x < quantEspaco; x++)
 	{
@@ -34,38 +36,61 @@ int main()
 	printf("\nchave | %s\n", chave);
 	
 	//inverte a string
+	int tamanhoSplit = 0;
 	for(x=0; x < quantEspaco; x++)
 	{
 		splitado[x] = inverte_string(splitado[x]);
+		tamanhoSplit += strlen(splitado[x]);
 	}
 	
-	//remove os espaÃ§os
-	for(x=0; x < quantEspaco; x++)
+	//remove os espaços - separar em um menu
+	/*for(x=0; x < quantEspaco; x++)
 	{
 		splitado[x]++;
-	}
+	}*/
 	
+	splitado[0]++; //tira espaco do primeiro split
 	//concatena a string invertida
-	char strInvertida[strlen(palavra)];
-	strInvertida[0] = '\0';
+	char strinvertida[tamanhoSplit];
+	strinvertida[0] = '\0';
 	for(x=0; x < quantEspaco; x++)
 	{
-		strcat(strInvertida, splitado[x]);
+		strcat(strinvertida, splitado[x]);
 	}
 	
-	printf("olha a string invertida concatenada: %s \n", strInvertida);
+	printf("olha a string invertida concatenada: %s \n", strinvertida);
 	
-	int *convertido;
-	int i;
-	for(x=0; x < quantEspaco; x++)
-	{
-		convertido = converte_string(splitado[x]);
-		for(i = 0; i < strlen(splitado[x]); i++)
-			printf("%d codigo \t %c letra\n", convertido[i], (char)convertido[i]);
-	}
-	
+	encripta_string(strinvertida, chave);
+
 	return 0;
 }
+
+void *encripta_string(char *string, char *chave)
+{	
+	int cabeVezes;
+	
+	int encriptado[strlen(string)];
+	
+	cabeVezes = strlen(string)/strlen(chave);
+	int resto = strlen(string) - strlen(chave)*cabeVezes;
+	
+	int x, i;
+	i=0;
+	for(x=0; x < strlen(string); x++)
+	{
+		if(i == strlen(chave))
+			i = 0;
+		encriptado[x] = (char)((int)string[x]^(int)chave[i]);
+		i++;
+	}
+	
+	for(x=0; x < strlen(string); x++)
+		printf("%x", encriptado[x]);
+	printf("\n");
+	
+}
+
+
 
 int *converte_string(char *string)
 {
