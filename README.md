@@ -1,15 +1,15 @@
-# criptografiainfobio
+﻿# criptografiainfobio
 
-Trabalho de criptografia desenvolvido na disciplina de **Introduçao a Informatica em Saude** na Universidade Federal de Ciencias da Saude de Porto Alegre (UFCSPA)
+Trabalho de criptografia desenvolvido na disciplina de **Introdução a Informática em Saúde** na Universidade Federal de Ciências da Saúde de Porto Alegre (UFCSPA)
 
 A criptografia consiste em:
 
-1. ~~Ler uma string~~ (concluido)
-2. ~~Formar uma palavra chave com a primeira letra de cada palavra~~ (concluido)
-3. ~~Inverter cada palavra da string~~ (concluido)
-4. Criptografar a string usando XOR
-5. Mostrar a string em hexadecimal
+1. ~~Ler uma string~~ (concluído)
+2. ~~Formar uma palavra chave com a primeira letra de cada palavra~~ (concluído)
+3. ~~Inverter cada palavra da string~~ (concluído)
+4. ~~Criptografar a string usando XOR~~ (concluído)
+5. ~~Mostrar a string em hexadecimal~~ (concluído)
 
-_Trabalho em desenvolvimento._
+_Trabalho concluído, com pequenos ajustes planejados._
 
 gabrielrs.sh@gmail.com
